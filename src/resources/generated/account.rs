@@ -10,8 +10,8 @@ use crate::params::{
     Deleted, Expand, Expandable, List, Metadata, Object, Paginable, RangeQuery, Timestamp,
 };
 use crate::resources::{
-    Address, Currency, DelayDays, ExternalAccount, File, Person, PersonVerificationParams,
-    VerificationDocumentParams,
+    Address, CreateBankAccount, Currency, DelayDays, ExternalAccount, File, Person,
+    PersonVerificationParams, VerificationDocumentParams,
 };
 
 /// The resource representing a Stripe "Account".
@@ -878,7 +878,7 @@ pub struct CreateAccount<'a> {
     /// By default, providing an external account sets it as the new default external account for its currency, and deletes the old default if one exists.
     /// To add additional external accounts without replacing the existing default for the currency, use the [bank account](https://stripe.com/docs/api#account_create_bank_account) or [card creation](https://stripe.com/docs/api#account_create_card) APIs.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub external_account: Option<&'a str>,
+    pub external_account: Option<CreateExternalAccount>,
 
     /// Information about the person represented by the account.
     ///
@@ -1037,7 +1037,7 @@ pub struct UpdateAccount<'a> {
     /// By default, providing an external account sets it as the new default external account for its currency, and deletes the old default if one exists.
     /// To add additional external accounts without replacing the existing default for the currency, use the [bank account](https://stripe.com/docs/api#account_create_bank_account) or [card creation](https://stripe.com/docs/api#account_create_card) APIs.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub external_account: Option<&'a str>,
+    pub external_account: Option<CreateExternalAccount>,
 
     /// Information about the person represented by the account.
     ///
@@ -2747,6 +2747,12 @@ pub struct TransferScheduleParams {
     /// (required and applicable only if `interval` is `weekly`.).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub weekly_anchor: Option<TransferScheduleParamsWeeklyAnchor>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(tag = "object", rename_all = "snake_case")]
+pub enum CreateExternalAccount {
+    BankAccount(CreateBankAccount),
 }
 
 /// An enum representing the possible values of an `Account`'s `business_type` field.

@@ -281,6 +281,31 @@ impl std::default::Default for AccountRequirementsErrorCode {
     }
 }
 
+#[derive(Clone, Debug, Serialize, Default)]
+pub struct CreateBankAccount {
+    /// Two-letter ISO code representing the country the bank account is located in.
+    pub country: String,
+
+    /// Three-letter [ISO code for the currency](https://stripe.com/docs/payouts) paid out to the bank account.
+    pub currency: Currency,
+
+    pub account_number: String,
+
+    /// The name of the person or business that owns the bank account.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub account_holder_name: Option<String>,
+
+    /// The type of entity that holds the account.
+    ///
+    /// This can be either `individual` or `company`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub account_holder_type: Option<String>,
+
+    /// The routing transit number for the bank account.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub routing_number: Option<String>,
+}
+
 /// An enum representing the possible values of an `BankAccount`'s `available_payout_methods` field.
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, Eq, PartialEq)]
 #[serde(rename_all = "snake_case")]
